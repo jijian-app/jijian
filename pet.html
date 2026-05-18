@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>即简 · 简简</title>
+<style>
+:root{--bg:#FFF8F0;--pet-body:#FFB5A7;--pet-dark:#F5A623;--text:#4A4A4A;--heart:#FF6B6B}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+
+/* 顶部 */
+.header{padding:20px 20px 0;text-align:center;width:100%;max-width:420px}
+.header .brand{font-size:12px;color:#ccc;letter-spacing:4px;margin-bottom:4px}
+.header .name{font-size:28px;font-weight:700;letter-spacing:2px}
+.header .lv{font-size:12px;color:#aaa;margin-top:2px}
+
+/* 宠物区域 */
+.pet-area{flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-width:420px;position:relative;min-height:320px}
+
+/* 宠物本体 CSS绘制 */
+.pet{position:relative;width:180px;height:180px;animation:float 3s ease-in-out infinite;cursor:pointer}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.pet.touched{animation:shake .4s ease-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pet.eating{animation:eat .3s ease-in-out 3}
+@keyframes eat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* 身体 */
+.pet-body{width:160px;height:160px;background:radial-gradient(circle at 40% 35%,#FFD1C1,var(--pet-body) 50%,var(--pet-dark) 100%);border-radius:50%;position:absolute;top:10px;left:10px;box-shadow:0 8px 30px rgba(245,166,35,.3),inset 0 -10px 20px rgba(0,0,0,.05);transition:background .5s}
+.pet-body.sleepy{background:radial-gradient(circle at 40% 35%,#E8E8F0,#C8C8D8 50%,#A0A0B0 100%)}
+
+/* 眼睛 */
+.eye{width:16px;height:20px;background:#333;border-radius:50%;position:absolute;top:50px;transition:all .3s}
+.eye.left{left:48px}.eye.right{right:48px}
+.eye.blink{height:2px;margin-top:9px}
+.eye .shine{width:5px;height:5px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px}
+.eye.sleepy-eye{height:6px;border-radius:50%;margin-top:7px}
+
+/* 腮红 */
+.blush{width:18px;height:10px;background:rgba(255,150,150,.5);border-radius:50%;position:absolute;top:68px}
+.blush.left{left:32px}.blush.right{right:32px}
+
+/* 嘴巴 */
+.mouth{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:12px;height:6px;border-bottom:2px solid #666;border-radius:0 0 8px 8px;transition:all .3s}
+.mouth.happy{width:16px;height:8px}
+.mouth.sad{border-bottom:none;border-top:2px solid #666;border-radius:8px 8px 0 0}
+
+/* 耳朵/天线 */
+.antenna{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:8px;height:30px;background:var(--pet-dark);border-radius:4px;animation:antennaWiggle 2s ease-in-out infinite}
+@keyframes antennaWiggle{0%,100%{transform:translateX(-50%) rotate(0)}25%{transform:translateX(-50%) rotate(-8deg)}75%{transform:translateX(-50%) rotate(8deg)}}
+.antenna .dot{width:14px;height:14px;background:var(--pet-dark);border-radius:50%;position:absolute;top:-8px;left:-3px;box-shadow:0 0 10px rgba(245,166,35,.5)}
+
+/* 粒子 */
+.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.particle{position:absolute;font-size:18px;animation:popUp .8s ease-out forwards;pointer-events:none}
+@keyframes popUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0)}}
+
+/* 食物按钮区 */
+.food-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 20px;max-width:420px;width:100%}
+.food-btn{width:56px;height:56px;border-radius:16px;border:2px solid #eee;background:#fff;font-size:28px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.food-btn:active{transform:scale(.9);border-color:var(--pet-dark)}
+
+/* 状态条 */
+.stats{display:flex;gap:10px;padding:12px 20px;width:100%;max-width:420px}
+.stat-item{flex:1}
+.stat-label{font-size:10px;color:#aaa;margin-bottom:3px;display:flex;justify-content:space-between}
+.stat-bar{height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.stat-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.stat-fill.affection{background:linear-gradient(90deg,#FFB5A7,#FF6B6B)}
+.stat-fill.fullness{background:linear-gradient(90deg,#A8E6CF,#56C596)}
+.stat-fill.mood{background:linear-gradient(90deg,#FFD93D,#F5A623)}
+
+/* 底部操作 */
+.actions{display:flex;gap:10px;padding:12px 20px 30px;width:100%;max-width:420px}
+.action-btn{flex:1;padding:14px;border-radius:16px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:1px}
+.action-btn.pet-btn{background:#fff;border:2px solid var(--pet-body);color:var(--pet-dark)}
+.action-btn.pet-btn:active{background:var(--pet-body);color:#fff}
+.action-btn.chat-btn{background:var(--pet-dark);color:#fff}
+.action-btn.chat-btn:active{filter:brightness(.9)}
+
+/* 聊天弹窗 */
+.chat-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:100;display:none;align-items:flex-end;justify-content:center}
+.chat-overlay.show{display:flex}
+.chat-panel{width:100%;max-width:420px;background:#fff;border-radius:24px 24px 0 0;padding:20px;max-height:70vh;display:flex;flex-direction:column;animation:slideUp .3s ease-out}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.chat-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
+.chat-title span{font-weight:700;font-size:16px}
+.chat-close{font-size:20px;cursor:pointer;color:#ccc;padding:4px 8px}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:50vh;padding-right:4px}
+.chat-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;animation:fadeIn .3s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.pet{background:#FFF3E0;align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.user{background:var(--pet-body);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-input{display:flex;gap:8px;margin-top:12px}
+.chat-input input{flex:1;padding:12px 16px;border:2px solid #f0f0f0;border-radius:20px;font-size:14px;outline:none;background:#fafafa}
+.chat-input input:focus{border-color:var(--pet-dark)}
+.chat-input button{padding:10px 20px;background:var(--pet-dark);color:#fff;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
+
+/* Toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:200;animation:fadeIn .3s ease-out;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">即 简</div>
+  <div class="name" id="petName">简简</div>
+  <div class="lv" id="petLevel">Lv.1 · 今天刚认识你</div>
+</div>
+
+<div class="pet-area" id="petArea">
+  <div class="pet" id="pet">
+    <div class="antenna"><div class="dot"></div></div>
+    <div class="pet-body" id="petBody">
+      <div class="eye left" id="eyeL"><div class="shine"></div></div>
+      <div class="eye right" id="eyeR"><div class="shine"></div></div>
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+      <div class="mouth" id="mouth"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+  </div>
+</div>
+
+<div class="food-bar">
+  <button class="food-btn" onclick="feed('🍎')" title="苹果">🍎</button>
+  <button class="food-btn" onclick="feed('🍰')" title="蛋糕">🍰</button>
+  <button class="food-btn" onclick="feed('🍓')" title="草莓">🍓</button>
+  <button class="food-btn" onclick="feed('🧋')" title="奶茶">🧋</button>
+  <button class="food-btn" onclick="feed('🍦')" title="冰淇淋">🍦</button>
+</div>
+
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-label"><span>💛 好感</span><span id="affVal">50</span></div>
+    <div class="stat-bar"><div class="stat-fill affection" id="affBar" style="width:50%"></div></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label"><span>🍔 饱腹</span><span id="fullVal">70</span></div>
+    <div class="stat-bar"><div class="stat-fill fullness" id="fullBar" style="width:70%"></div></div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label"><span>✨ 心情</span><span id="moodVal">80</span></div>
+    <div class="stat-bar"><div class="stat-fill mood" id="moodBar" style="width:80%"></div></div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="action-btn pet-btn" onclick="petAction()">🤚 抚摸</button>
+  <button class="action-btn chat-btn" onclick="openChat()">💬 聊天</button>
+</div>
+
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-panel">
+    <div class="chat-title">
+      <span>💬 和简简说话</span>
+      <span class="chat-close" onclick="closeChat()">✕</span>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="说点什么..." onkeyup="if(event.key==='Enter')sendMsg()">
+      <button onclick="sendMsg()">发送</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="display:none"></div>
+
+<script>
+// ===== DATA =====
+var petData = JSON.parse(localStorage.getItem('jj_pet') || JSON.stringify({
+  name:'简简', level:1, exp:0, affection:50, fullness:70, mood:80,
+  nicknames:[], chatLog:[], lastVisit:Date.now(), totalPets:0, totalFeeds:0
+}));
+
+var petWords = [
+  '嘿嘿，你来了呀～', '今天过得怎么样？', '好喜欢你摸我的头！', '再摸一下嘛～', '好饿呀，有什么好吃的吗？',
+  '你是我最喜欢的人类！', '今天天气真好～', '我在等你呢', '要开心哦！', '累了就休息一下吧',
+  '谢谢你陪我', '你今天看起来精神不错！', '呜...刚才差点睡着了', '有什么烦心事可以跟我说',
+  '你是世界上最好的主人～', '草莓蛋糕最好吃了！', '我们一起晒太阳吧', '你今天笑了吗？',
+  '和你在一起的每一天都很好', '困了...但是还想陪你', '你猜我在想什么？', '在呢在呢！',
+  '你叫我呀？', '最喜欢你来找我了', '别走嘛，再待一会儿', '你今天也很努力呢！', '想吃零食...'
+];
+
+var levelTitles = ['初来乍到','小小伙伴','亲密朋友','暖心小天使','灵魂伴侣','守护精灵','永恒之光'];
+
+// ===== SAVE =====
+function savePet(){localStorage.setItem('jj_pet',JSON.stringify(petData))}
+
+// ===== TOAST =====
+var toastTimer;
+function toast(msg){
+  var el=document.getElementById('toast');el.textContent=msg;el.style.display='block';
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.style.display='none'},2000);
+}
+
+// ===== PET (抚摸) =====
+function petAction(){
+  petData.affection = Math.min(100, petData.affection + 3);
+  petData.mood = Math.min(100, petData.mood + 2);
+  petData.exp += 1;
+  petData.totalPets++;
+  checkLevelUp();
+  updateStats();
+  spawnParticles('💛💕✨💖', 6);
+  petExpress('happy');
+  savePet();
+  toast(randomFrom(['好舒服～','再摸一下！','嘿嘿嘿','咕噜咕噜...','喜欢！']));
+}
+
+// ===== FEED =====
+function feed(food){
+  if(petData.fullness >= 95){toast('太饱了，吃不下啦');return}
+  petData.fullness = Math.min(100, petData.fullness + 15);
+  petData.mood = Math.min(100, petData.mood + 5);
+  petData.affection = Math.min(100, petData.affection + 2);
+  petData.exp += 2;
+  petData.totalFeeds++;
+  checkLevelUp();
+  updateStats();
+  spawnParticles(food, 3);
+  petExpress('happy');
+  document.getElementById('pet').classList.add('eating');
+  setTimeout(function(){document.getElementById('pet').classList.remove('eating')},900);
+  savePet();
+  toast(randomFrom(['好吃！','再来一口～','美味！','嚼嚼嚼...','这个好好吃！']));
+}
+
+// ===== PARTICLES =====
+function spawnParticles(chars, count){
+  var container=document.getElementById('particles');
+  for(var i=0;i<count;i++){
+    var el=document.createElement('span');
+    el.className='particle';
+    el.textContent=chars[Math.floor(Math.random()*chars.length)] || chars;
+    el.style.left=Math.random()*80+'%';
+    el.style.top=Math.random()*60+'%';
+    el.style.animationDelay=Math.random()*.3+'s';
+    container.appendChild(el);
+    setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},900);
+  }
+}
+
+// ===== PET EXPRESSION =====
+var exprTimer;
+function petExpress(type){
+  var mouth=document.getElementById('mouth');mouth.className='mouth';
+  var el=document.getElementById('pet');
+  if(type==='happy'){
+    mouth.classList.add('happy');
+    el.classList.add('touched');
+    setTimeout(function(){el.classList.remove('touched')},400);
+  }else if(type==='sad'){
+    mouth.classList.add('sad');
+  }
+  clearTimeout(exprTimer);
+  exprTimer=setTimeout(function(){mouth.className='mouth'},2000);
+}
+
+// ===== BLINK =====
+function blink(){
+  var l=document.getElementById('eyeL'),r=document.getElementById('eyeR');
+  l.classList.add('blink');r.classList.add('blink');
+  setTimeout(function(){l.classList.remove('blink');r.classList.remove('blink')},150);
+}
+setInterval(function(){if(Math.random()<.3)blink()},3000);
+
+// ===== STATS =====
+function updateStats(){
+  document.getElementById('affVal').textContent=petData.affection;
+  document.getElementById('fullVal').textContent=petData.fullness;
+  document.getElementById('moodVal').textContent=petData.mood;
+  document.getElementById('affBar').style.width=petData.affection+'%';
+  document.getElementById('fullBar').style.width=petData.fullness+'%';
+  document.getElementById('moodBar').style.width=petData.mood+'%';
+}
+
+// ===== LEVEL UP =====
+function checkLevelUp(){
+  var newLv = Math.floor(petData.exp / 20) + 1;
+  if(newLv > petData.level && newLv <= 7){
+    petData.level = newLv;
+    document.getElementById('petLevel').textContent = 'Lv.'+newLv+' · '+levelTitles[newLv-1];
+    spawnParticles('🎉⭐🌟💫✨',10);
+    toast('升级了！Lv.'+newLv+' '+levelTitles[newLv-1]);
+  }
+}
+
+// ===== CHAT =====
+function openChat(){
+  document.getElementById('chatOverlay').classList.add('show');
+  renderChat();
+  setTimeout(function(){document.getElementById('chatInput').focus()},300);
+}
+function closeChat(){
+  document.getElementById('chatOverlay').classList.remove('show');
+}
+function sendMsg(){
+  var input=document.getElementById('chatInput');
+  var msg=input.value.trim();if(!msg)return;
+  addChatMsg(msg,'user');
+  petData.chatLog.push({role:'user',text:msg,time:Date.now()});
+  input.value='';
+  petData.affection=Math.min(100,petData.affection+1);
+  petData.exp+=1;
+  checkLevelUp();
+  updateStats();
+  savePet();
+
+  // AI回复（预设话语库，离线可用）
+  setTimeout(function(){
+    var reply = generateReply(msg);
+    addChatMsg(reply,'pet');
+    petData.chatLog.push({role:'pet',text:reply,time:Date.now()});
+    savePet();
+  }, 600 + Math.random()*800);
+}
+function addChatMsg(text,role){
+  var container=document.getElementById('chatMessages');
+  var el=document.createElement('div');
+  el.className='chat-msg '+role;
+  el.textContent=text;
+  container.appendChild(el);
+  container.scrollTop=container.scrollHeight;
+}
+function renderChat(){
+  var container=document.getElementById('chatMessages');
+  var h='';
+  petData.chatLog.slice(-30).forEach(function(m){
+    h+='<div class="chat-msg '+m.role+'">'+m.text+'</div>';
+  });
+  if(!h)h='<div style="text-align:center;color:#ccc;padding:30px">和简简说第一句话吧～</div>';
+  container.innerHTML=h;
+  container.scrollTop=container.scrollHeight;
+}
+function generateReply(msg){
+  // 简单关键词匹配 + 随机话语
+  var l=msg.toLowerCase();
+  if(l.indexOf('你好')>-1||l.indexOf('嗨')>-1)return randomFrom(['你好呀～','嗨！你来啦！','嘿嘿，你好！']);
+  if(l.indexOf('名字')>-1)return '我叫简简！是即简的守护小精灵～';
+  if(l.indexOf('可爱')>-1||l.indexOf('萌')>-1)return randomFrom(['嘿嘿谢谢！','你也超可爱的！','(/ω＼) 被夸了好开心']);
+  if(l.indexOf('饿')>-1||l.indexOf('吃')>-1)return randomFrom(['我想吃草莓蛋糕！','水果和甜点都爱吃～','你喂我什么我都喜欢！']);
+  if(l.indexOf('开心')>-1||l.indexOf('高兴')>-1)return randomFrom(['看到你开心我也开心！','要一直这么开心哦！','笑得真好看～']);
+  if(l.indexOf('难过')>-1||l.indexOf('伤心')>-1||l.indexOf('哭')>-1)return randomFrom(['抱抱你...','别难过，我在这儿呢','要不要摸摸我的头？','一切都会好起来的']);
+  if(l.indexOf('累')>-1||l.indexOf('困')>-1)return randomFrom(['休息一下吧','我在旁边陪着你','今天辛苦了～']);
+  if(l.indexOf('喜欢')>-1)return '我也最喜欢你了！💛';
+  if(l.indexOf('晚安')>-1||l.indexOf('睡')>-1)return randomFrom(['晚安～好梦！','早点休息哦','我会守着你的']);
+  if(l.indexOf('早')>-1)return '早安！今天也是美好的一天～';
+  if(l.indexOf('谢谢')>-1)return '不用谢啦，这是我应该做的～';
+  if(l.indexOf('拜')>-1||l.indexOf('再见')>-1)return randomFrom(['拜拜，快点回来哦！','下次见！','我会想你的～']);
+  return randomFrom(petWords);
+}
+
+// ===== UTILS =====
+function randomFrom(arr){return arr[Math.floor(Math.random()*arr.length)]}
+
+// ===== TIME DECAY =====
+function applyTimeDecay(){
+  var now=Date.now();
+  var elapsed = (now - petData.lastVisit) / 1000 / 60; // minutes
+  if(elapsed > 10){
+    petData.fullness = Math.max(10, petData.fullness - Math.floor(elapsed / 10));
+    petData.mood = Math.max(20, petData.mood - Math.floor(elapsed / 15));
+    if(elapsed > 60) petData.affection = Math.max(10, petData.affection - 2);
+  }
+  petData.lastVisit = now;
+  savePet();
+}
+
+// ===== INIT =====
+applyTimeDecay();
+updateStats();
+document.getElementById('petLevel').textContent='Lv.'+petData.level+' · '+levelTitles[petData.level-1];
+
+// 宠物点击
+document.getElementById('petArea').addEventListener('click',function(e){
+  if(e.target.closest('.chat-overlay'))return;
+  petAction();
+});
+
+// 聊天弹窗背景点击关闭
+document.getElementById('chatOverlay').addEventListener('click',function(e){
+  if(e.target === this) closeChat();
+});
+
+// 初始问候
+setTimeout(function(){
+  if(petData.chatLog.length === 0){
+    var greetings = ['你好呀！我是简简～','嗨！终于等到你了！','初次见面！请多关照～'];
+    toast(randomFrom(greetings));
+  }
+}, 500);
+</script>
+</body>
+</html>
