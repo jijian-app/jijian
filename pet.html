@@ -7,82 +7,104 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="简简">
-<meta name="theme-color" content="#FFF8F0">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='g' cx='40%25' cy='35%25'><stop offset='0%25' stop-color='%23FFD1C1'/><stop offset='50%25' stop-color='%23FFB5A7'/><stop offset='100%25' stop-color='%23F5A623'/></radialGradient></defs><circle cx='50' cy='55' r='45' fill='url(%23g)'/><circle cx='38' cy='45' r='6' fill='%23333'/><circle cx='36' cy='43' r='2' fill='%23fff'/><circle cx='62' cy='45' r='6' fill='%23333'/><circle cx='60' cy='43' r='2' fill='%23fff'/><ellipse cx='36' cy='56' rx='7' ry='4' fill='rgba(255,150,150,.5)'/><ellipse cx='64' cy='56' rx='7' ry='4' fill='rgba(255,150,150,.5)'/><path d='M44 63 Q50 70 56 63' stroke='%23666' stroke-width='2' fill='none' stroke-linecap='round'/></svg>">
+<meta name="theme-color" content="#FAFAFA">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FAFAFA'/><ellipse cx='50' cy='55' rx='28' ry='25' fill='white' stroke='%231a1a1a' stroke-width='2.5'/><circle cx='40' cy='45' r='5' fill='%231a1a1a'/><circle cx='38' cy='43' r='2' fill='white'/><circle cx='60' cy='45' r='5' fill='%231a1a1a'/><circle cx='58' cy='43' r='2' fill='white'/><polygon points='44,36 30,18 58,18' fill='%231a1a1a'/><polygon points='56,36 70,18 42,18' fill='%231a1a1a'/><polygon points='46,38 36,22 56,22' fill='white'/><polygon points='54,38 64,22 44,22' fill='white'/><polygon points='47,53 53,53 50,57' fill='%231a1a1a'/><line x1='30' y1='52' x2='17' y2='50' stroke='%231a1a1a' stroke-width='1.5' stroke-linecap='round'/><line x1='30' y1='56' x2='17' y2='58' stroke='%231a1a1a' stroke-width='1.5' stroke-linecap='round'/><line x1='70' y1='52' x2='83' y2='50' stroke='%231a1a1a' stroke-width='1.5' stroke-linecap='round'/><line x1='70' y1='56' x2='83' y2='58' stroke='%231a1a1a' stroke-width='1.5' stroke-linecap='round'/></svg>">
 <style>
-:root{--bg:#FFF8F0;--pet-body:#FFB5A7;--pet-dark:#F5A623;--text:#4A4A4A;--heart:#FF6B6B}
+:root{--bg:#FAFAFA;--cat-body:#fff;--cat-dark:#1a1a1a;--text:#333;--accent:#e8e8e8}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 
 /* 顶部 */
-.header{padding:20px 20px 0;text-align:center;width:100%;max-width:420px}
-.header .brand{font-size:12px;color:#ccc;letter-spacing:4px;margin-bottom:4px}
-.header .name{font-size:28px;font-weight:700;letter-spacing:2px}
-.header .lv{font-size:12px;color:#aaa;margin-top:2px}
+.header{padding:28px 20px 0;text-align:center;width:100%;max-width:420px}
+.header .brand{font-size:11px;color:#bbb;letter-spacing:6px;margin-bottom:4px;text-transform:uppercase}
+.header .name{font-size:26px;font-weight:300;letter-spacing:4px}
+.header .lv{font-size:11px;color:#bbb;margin-top:4px;font-weight:300}
 
 /* 宠物区域 */
-.pet-area{flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-width:420px;position:relative;min-height:320px}
+.pet-area{flex:1;display:flex;align-items:center;justify-content:center;width:100%;max-width:420px;position:relative;min-height:360px}
 
-/* 宠物本体 CSS绘制 */
-.pet{position:relative;width:180px;height:180px;animation:float 3s ease-in-out infinite;cursor:pointer}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.pet.touched{animation:shake .4s ease-out}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.pet.eating{animation:eat .3s ease-in-out 3}
-@keyframes eat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+/* === 猫咪角色 === */
+.cat{position:relative;width:200px;height:200px;animation:float 3s ease-in-out infinite;cursor:pointer}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.cat.touched{animation:shake .4s ease-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.cat.eating{animation:eat .3s ease-in-out 3}
+@keyframes eat{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
 /* 身体 */
-.pet-body{width:160px;height:160px;background:radial-gradient(circle at 40% 35%,#FFD1C1,var(--pet-body) 50%,var(--pet-dark) 100%);border-radius:50%;position:absolute;top:10px;left:10px;box-shadow:0 8px 30px rgba(245,166,35,.3),inset 0 -10px 20px rgba(0,0,0,.05);transition:background .5s}
-.pet-body.sleepy{background:radial-gradient(circle at 40% 35%,#E8E8F0,#C8C8D8 50%,#A0A0B0 100%)}
+.cat-body{width:84px;height:70px;background:var(--cat-body);border:2px solid var(--cat-dark);border-radius:42px 42px 30px 30px;position:absolute;bottom:12px;left:58px;z-index:1}
+
+/* 头 */
+.cat-head{width:110px;height:100px;background:var(--cat-body);border:2px solid var(--cat-dark);border-radius:55px 55px 45px 45px;position:absolute;top:12px;left:45px;z-index:3}
+
+/* 耳朵 - border三角形 */
+.cat-ear{position:absolute;width:0;height:0;z-index:2}
+.cat-ear.ear-l{border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:36px solid var(--cat-dark);top:4px;left:42px;transform:rotate(-12deg)}
+.cat-ear.ear-r{border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:36px solid var(--cat-dark);top:4px;right:42px;transform:rotate(12deg)}
+/* 内耳 */
+.cat-ear.ear-l::after{content:'';position:absolute;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:22px solid var(--cat-body);top:14px;left:-10px}
+.cat-ear.ear-r::after{content:'';position:absolute;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:22px solid var(--cat-body);top:14px;left:-10px}
 
 /* 眼睛 */
-.eye{width:16px;height:20px;background:#333;border-radius:50%;position:absolute;top:50px;transition:all .3s}
-.eye.left{left:48px}.eye.right{right:48px}
-.eye.blink{height:2px;margin-top:9px}
-.eye .shine{width:5px;height:5px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px}
-.eye.sleepy-eye{height:6px;border-radius:50%;margin-top:7px}
+.cat-eye{position:absolute;width:18px;height:20px;background:var(--cat-dark);border-radius:50%;top:42px;z-index:4;transition:all .2s}
+.cat-eye.eye-l{left:22px}.cat-eye.eye-r{right:22px}
+.cat-eye .cat-pupil{width:6px;height:6px;background:#fff;border-radius:50%;position:absolute;top:4px;left:4px}
+.cat-eye.blink{height:2px;margin-top:9px}
+.cat-eye.blink .cat-pupil{display:none}
 
-/* 腮红 */
-.blush{width:18px;height:10px;background:rgba(255,150,150,.5);border-radius:50%;position:absolute;top:68px}
-.blush.left{left:32px}.blush.right{right:32px}
+/* 鼻子 */
+.cat-nose{position:absolute;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid var(--cat-dark);top:58px;left:50%;transform:translateX(-50%);z-index:4}
 
 /* 嘴巴 */
-.mouth{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:12px;height:6px;border-bottom:2px solid #666;border-radius:0 0 8px 8px;transition:all .3s}
-.mouth.happy{width:16px;height:8px}
-.mouth.sad{border-bottom:none;border-top:2px solid #666;border-radius:8px 8px 0 0}
+.cat-mouth{position:absolute;top:66px;left:50%;transform:translateX(-50%);z-index:4}
+.cat-mouth::before,.cat-mouth::after{content:'';position:absolute;width:10px;height:5px;border-bottom:2px solid var(--cat-dark);border-radius:0 0 6px 6px}
+.cat-mouth::before{left:-9px}.cat-mouth::after{right:-9px}
+.cat-mouth.happy::before,.cat-mouth.happy::after{height:7px;width:11px}
+.cat-mouth.sad::before,.cat-mouth.sad::after{border-bottom:none;border-top:2px solid var(--cat-dark);border-radius:6px 6px 0 0;top:3px}
 
-/* 耳朵/天线 */
-.antenna{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:8px;height:30px;background:var(--pet-dark);border-radius:4px;animation:antennaWiggle 2s ease-in-out infinite}
-@keyframes antennaWiggle{0%,100%{transform:translateX(-50%) rotate(0)}25%{transform:translateX(-50%) rotate(-8deg)}75%{transform:translateX(-50%) rotate(8deg)}}
-.antenna .dot{width:14px;height:14px;background:var(--pet-dark);border-radius:50%;position:absolute;top:-8px;left:-3px;box-shadow:0 0 10px rgba(245,166,35,.5)}
+/* 胡须 */
+.cat-whisker{position:absolute;z-index:4}
+.cat-whisker::before,.cat-whisker::after{content:'';position:absolute;width:20px;height:1px;background:var(--cat-dark);transform-origin:right center;border-radius:1px}
+.cat-whisker.wl{top:56px;left:8px}
+.cat-whisker.wl::before{transform:rotate(-8deg)}.cat-whisker.wl::after{transform:rotate(8deg);margin-top:8px}
+.cat-whisker.wr{top:56px;right:8px}
+.cat-whisker.wr::before{transform:rotate(8deg);transform-origin:left center}.cat-whisker.wr::after{transform:rotate(-8deg);transform-origin:left center;margin-top:8px}
+
+/* 爪子 */
+.cat-paw{position:absolute;width:22px;height:22px;background:var(--cat-body);border:2px solid var(--cat-dark);border-radius:12px 12px 14px 14px;bottom:0;z-index:1}
+.cat-paw.paw-l{left:62px}.cat-paw.paw-r{right:62px}
+
+/* 尾巴 */
+.cat-tail{position:absolute;width:40px;height:12px;border:2px solid var(--cat-dark);border-left:none;border-radius:0 10px 10px 0;bottom:20px;right:18px;z-index:0;animation:tailWag 2s ease-in-out infinite;transform-origin:left center}
+@keyframes tailWag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(15deg)}}
 
 /* 粒子 */
-.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.particle{position:absolute;font-size:18px;animation:popUp .8s ease-out forwards;pointer-events:none}
-@keyframes popUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0)}}
+.particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+.particle{position:absolute;font-size:16px;animation:popUp .8s ease-out forwards;pointer-events:none}
+@keyframes popUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-50px) scale(0)}}
 
 /* 食物按钮区 */
 .food-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 20px;max-width:420px;width:100%}
-.food-btn{width:56px;height:56px;border-radius:16px;border:2px solid #eee;background:#fff;font-size:28px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
-.food-btn:active{transform:scale(.9);border-color:var(--pet-dark)}
+.food-btn{width:56px;height:56px;border-radius:16px;border:2px solid #e0e0e0;background:#fff;font-size:28px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.food-btn:active{transform:scale(.9);border-color:var(--cat-dark)}
 
 /* 状态条 */
 .stats{display:flex;gap:10px;padding:12px 20px;width:100%;max-width:420px}
 .stat-item{flex:1}
-.stat-label{font-size:10px;color:#aaa;margin-bottom:3px;display:flex;justify-content:space-between}
+.stat-label{font-size:10px;color:#999;margin-bottom:3px;display:flex;justify-content:space-between}
 .stat-bar{height:6px;background:#eee;border-radius:3px;overflow:hidden}
 .stat-fill{height:100%;border-radius:3px;transition:width .6s ease}
-.stat-fill.affection{background:linear-gradient(90deg,#FFB5A7,#FF6B6B)}
-.stat-fill.fullness{background:linear-gradient(90deg,#A8E6CF,#56C596)}
-.stat-fill.mood{background:linear-gradient(90deg,#FFD93D,#F5A623)}
+.stat-fill.affection{background:linear-gradient(90deg,#ddd,var(--cat-dark))}
+.stat-fill.fullness{background:linear-gradient(90deg,#ddd,var(--cat-dark))}
+.stat-fill.mood{background:linear-gradient(90deg,#ddd,var(--cat-dark))}
 
 /* 底部操作 */
 .actions{display:flex;gap:10px;padding:12px 20px 30px;width:100%;max-width:420px}
 .action-btn{flex:1;padding:14px;border-radius:16px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;letter-spacing:1px}
-.action-btn.pet-btn{background:#fff;border:2px solid var(--pet-body);color:var(--pet-dark)}
-.action-btn.pet-btn:active{background:var(--pet-body);color:#fff}
-.action-btn.chat-btn{background:var(--pet-dark);color:#fff}
-.action-btn.chat-btn:active{filter:brightness(.9)}
+.action-btn.pet-btn{background:#fff;border:2px solid #e0e0e0;color:var(--cat-dark)}
+.action-btn.pet-btn:active{background:var(--cat-dark);color:#fff;border-color:var(--cat-dark)}
+.action-btn.chat-btn{background:var(--cat-dark);color:#fff}
+.action-btn.chat-btn:active{filter:brightness(.8)}
 
 /* 聊天弹窗 */
 .chat-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.3);z-index:100;display:none;align-items:flex-end;justify-content:center}
@@ -95,12 +117,12 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI
 .chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:50vh;padding-right:4px}
 .chat-msg{max-width:80%;padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.5;animation:fadeIn .3s ease-out}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.chat-msg.pet{background:#FFF3E0;align-self:flex-start;border-bottom-left-radius:4px}
-.chat-msg.user{background:var(--pet-body);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg.pet{background:#f5f5f5;align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.user{background:var(--cat-dark);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
 .chat-input{display:flex;gap:8px;margin-top:12px}
 .chat-input input{flex:1;padding:12px 16px;border:2px solid #f0f0f0;border-radius:20px;font-size:14px;outline:none;background:#fafafa}
-.chat-input input:focus{border-color:var(--pet-dark)}
-.chat-input button{padding:10px 20px;background:var(--pet-dark);color:#fff;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
+.chat-input input:focus{border-color:var(--cat-dark)}
+.chat-input button{padding:10px 20px;background:var(--cat-dark);color:#fff;border:none;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
 
 /* Toast */
 .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:200;animation:fadeIn .3s ease-out;pointer-events:none}
@@ -115,15 +137,21 @@ body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI
 </div>
 
 <div class="pet-area" id="petArea">
-  <div class="pet" id="pet">
-    <div class="antenna"><div class="dot"></div></div>
-    <div class="pet-body" id="petBody">
-      <div class="eye left" id="eyeL"><div class="shine"></div></div>
-      <div class="eye right" id="eyeR"><div class="shine"></div></div>
-      <div class="blush left"></div>
-      <div class="blush right"></div>
-      <div class="mouth" id="mouth"></div>
+  <div class="cat" id="pet">
+    <div class="cat-head">
+      <div class="cat-ear ear-l"></div>
+      <div class="cat-ear ear-r"></div>
+      <div class="cat-whisker wl"></div>
+      <div class="cat-whisker wr"></div>
+      <div class="cat-eye eye-l" id="eyeL"><div class="cat-pupil"></div></div>
+      <div class="cat-eye eye-r" id="eyeR"><div class="cat-pupil"></div></div>
+      <div class="cat-nose"></div>
+      <div class="cat-mouth" id="mouth"></div>
     </div>
+    <div class="cat-body"></div>
+    <div class="cat-paw paw-l"></div>
+    <div class="cat-paw paw-r"></div>
+    <div class="cat-tail"></div>
     <div class="particles" id="particles"></div>
   </div>
 </div>
@@ -250,7 +278,7 @@ function spawnParticles(chars, count){
 // ===== PET EXPRESSION =====
 var exprTimer;
 function petExpress(type){
-  var mouth=document.getElementById('mouth');mouth.className='mouth';
+  var mouth=document.getElementById('mouth');mouth.className='cat-mouth';
   var el=document.getElementById('pet');
   if(type==='happy'){
     mouth.classList.add('happy');
@@ -260,7 +288,7 @@ function petExpress(type){
     mouth.classList.add('sad');
   }
   clearTimeout(exprTimer);
-  exprTimer=setTimeout(function(){mouth.className='mouth'},2000);
+  exprTimer=setTimeout(function(){mouth.className='cat-mouth'},2000);
 }
 
 // ===== BLINK =====
